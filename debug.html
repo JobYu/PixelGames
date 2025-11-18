@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深海寻宝 - 调试版本</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f1419;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        #debug-info {
+            background: #1a2332;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        canvas {
+            border: 2px solid #1976d2;
+            background: linear-gradient(180deg, #42a5f5 0%, #1976d2 50%, #0d47a1 100%);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <h1>深海寻宝 - 调试版本</h1>
+    
+    <div id="debug-info">
+        <h3>调试信息:</h3>
+        <div id="debug-log"></div>
+    </div>
+    
+    <div>
+        <button class="btn" onclick="testGameConfig()">测试GameConfig</button>
+        <button class="btn" onclick="testClasses()">测试类创建</button>
+        <button class="btn" onclick="testStorage()">测试存储</button>
+        <button class="btn" onclick="startMinimalGame()">启动最小游戏</button>
+    </div>
+    
+    <canvas id="game-canvas" width="400" height="300" style="display: block; margin: 20px 0;"></canvas>
+    
+    <!-- 只加载必要的脚本 -->
+    <script src="config/gameConfig.js"></script>
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/hook.js"></script>
+    <script src="src/js/items.js"></script>
+    <script src="src/js/level.js"></script>
+    <script src="src/js/game.js"></script>
+    
+    <script>
+        // 调试日志函数
+        function debugLog(message) {
+            console.log(message);
+            const logDiv = document.getElementById('debug-log');
+            logDiv.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        // 测试GameConfig
+        function testGameConfig() {
+            debugLog('测试GameConfig...');
+            try {
+                if (typeof GameConfig !== 'undefined') {
+                    debugLog('✓ GameConfig已加载');
+                    debugLog('CANVAS_WIDTH: ' + GameConfig.CANVAS_WIDTH);
+                    debugLog('HOOK配置: ' + JSON.stringify(GameConfig.HOOK));
+                    debugLog('道具配置数量: ' + Object.keys(GameConfig.ITEMS).length);
+                } else {
+                    debugLog('✗ GameConfig未定义');
+                }
+            } catch (error) {
+                debugLog('✗ GameConfig测试失败: ' + error.message);
+            }
+        }
+        
+        // 测试类创建
+        function testClasses() {
+            debugLog('测试类创建...');
+            try {
+                debugLog('创建Hook...');
+                const hook = new Hook();
+                debugLog('✓ Hook创建成功');
+                
+                debugLog('创建ItemManager...');
+                const itemManager = new ItemManager();
+                debugLog('✓ ItemManager创建成功');
+                
+                debugLog('创建LevelManager...');
+                const levelManager = new LevelManager();
+                debugLog('✓ LevelManager创建成功');
+                
+                debugLog('初始化GameData...');
+                GameData.init();
+                debugLog('✓ GameData初始化成功');
+                
+            } catch (error) {
+                debugLog('✗ 类创建失败: ' + error.message);
+                debugLog('错误堆栈: ' + error.stack);
+            }
+        }
+        
+        // 测试存储
+        function testStorage() {
+            debugLog('测试存储功能...');
+            try {
+                Storage.save('test_key', {test: 'value'});
+                const loaded = Storage.load('test_key');
+                if (loaded && loaded.test === 'value') {
+                    debugLog('✓ 存储功能正常');
+                } else {
+                    debugLog('✗ 存储功能异常');
+                }
+                Storage.remove('test_key');
+            } catch (error) {
+                debugLog('✗ 存储测试失败: ' + error.message);
+            }
+        }
+        
+        // 启动最小游戏
+        function startMinimalGame() {
+            debugLog('启动最小游戏...');
+            try {
+                const canvas = document.getElementById('game-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // 测试Canvas渲染
+                ctx.fillStyle = '#1976d2';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('深海寻宝', canvas.width/2, canvas.height/2);
+                
+                debugLog('✓ Canvas渲染成功');
+                
+                // 创建基础游戏对象
+                const hook = new Hook();
+                const itemManager = new ItemManager();
+                
+                // 简单的渲染循环
+                function render() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // 背景
+                    ctx.fillStyle = '#1976d2';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // 渲染钩子
+                    hook.render(ctx);
+                    
+                    requestAnimationFrame(render);
+                }
+                
+                render();
+                debugLog('✓ 最小游戏启动成功');
+                
+            } catch (error) {
+                debugLog('✗ 最小游戏启动失败: ' + error.message);
+                debugLog('错误堆栈: ' + error.stack);
+            }
+        }
+        
+        // 页面加载完成后自动运行基础测试
+        window.addEventListener('load', function() {
+            debugLog('页面加载完成');
+            testGameConfig();
+        });
+        
+        // 全局错误捕获
+        window.addEventListener('error', function(e) {
+            debugLog('全局错误: ' + e.error.message);
+            debugLog('文件: ' + e.filename + ':' + e.lineno);
+        });
+    </script>
+</body>
+</html> 
