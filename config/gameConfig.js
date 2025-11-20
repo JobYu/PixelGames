@@ -116,25 +116,125 @@ const GameConfig = {
         {
             id: 1,
             name: "初次下潜",
-            timeLimit: 120,
+            timeLimit: 60,
             targetScore: 300,
             items: [
-                { type: 'GOLD_TINY', count: 5 },
+                { type: 'GOLD_TINY', count: 6 },
                 { type: 'GOLD_SMALL', count: 4 },
-                { type: 'ROCK_TINY', count: 3 },
-                { type: 'ROCK_SMALL', count: 2 }
+                { type: 'ROCK_TINY', count: 3 }
             ]
         },
         {
             id: 2,
             name: "认识重量",
-            timeLimit: 120,
-            targetScore: 600,
+            timeLimit: 60,
+            targetScore: 500,
+            items: [
+                { type: 'GOLD_SMALL', count: 5 },
+                { type: 'GOLD_MEDIUM', count: 2 },
+                { type: 'ROCK_SMALL', count: 4 },
+                { type: 'ROCK_MEDIUM', count: 1 }
+            ]
+        },
+        {
+            id: 3,
+            name: "灵活的小鱼",
+            timeLimit: 60,
+            targetScore: 650,
             items: [
                 { type: 'GOLD_SMALL', count: 4 },
+                { type: 'GOLD_MEDIUM', count: 2 },
+                { type: 'FISH_SMALL', count: 5 },
+                { type: 'ROCK_SMALL', count: 3 }
+            ]
+        },
+        {
+            id: 4,
+            name: "珍贵的钻石",
+            timeLimit: 60,
+            targetScore: 1000,
+            items: [
                 { type: 'GOLD_MEDIUM', count: 3 },
-                { type: 'ROCK_SMALL', count: 3 },
+                { type: 'DIAMOND', count: 1 },
+                { type: 'FISH_SMALL', count: 3 },
+                { type: 'ROCK_MEDIUM', count: 3 },
+                { type: 'ROCK_LARGE', count: 1 }
+            ]
+        },
+        {
+            id: 5,
+            name: "小试牛刀",
+            timeLimit: 60,
+            targetScore: 1200,
+            items: [
+                { type: 'GOLD_SMALL', count: 3 },
+                { type: 'GOLD_MEDIUM', count: 3 },
+                { type: 'GOLD_LARGE', count: 1 },
+                { type: 'DIAMOND', count: 1 },
+                { type: 'FISH_SMALL', count: 4 },
+                { type: 'ROCK_MEDIUM', count: 4 }
+            ]
+        },
+        {
+            id: 6,
+            name: "深海寻宝",
+            timeLimit: 60,
+            targetScore: 1500,
+            items: [
+                { type: 'GOLD_MEDIUM', count: 4 },
+                { type: 'GOLD_LARGE', count: 2 },
+                { type: 'DIAMOND', count: 1 },
+                { type: 'FISH_SMALL', count: 3 },
+                { type: 'ROCK_LARGE', count: 3 }
+            ]
+        },
+        {
+            id: 7,
+            name: "乱石阵",
+            timeLimit: 60,
+            targetScore: 1300,
+            items: [
+                { type: 'GOLD_LARGE', count: 3 },
+                { type: 'DIAMOND', count: 1 },
+                { type: 'ROCK_SMALL', count: 5 },
+                { type: 'ROCK_MEDIUM', count: 4 },
+                { type: 'ROCK_LARGE', count: 3 }
+            ]
+        },
+        {
+            id: 8,
+            name: "鱼群风暴",
+            timeLimit: 60,
+            targetScore: 1600,
+            items: [
+                { type: 'GOLD_MEDIUM', count: 3 },
+                { type: 'DIAMOND', count: 2 },
+                { type: 'FISH_SMALL', count: 8 },
                 { type: 'ROCK_MEDIUM', count: 2 }
+            ]
+        },
+        {
+            id: 9,
+            name: "巨石挑战",
+            timeLimit: 60,
+            targetScore: 1800,
+            items: [
+                { type: 'GOLD_LARGE', count: 4 },
+                { type: 'DIAMOND', count: 1 },
+                { type: 'ROCK_LARGE', count: 5 },
+                { type: 'FISH_SMALL', count: 2 }
+            ]
+        },
+        {
+            id: 10,
+            name: "深海传说",
+            timeLimit: 60,
+            targetScore: 2500,
+            items: [
+                { type: 'GOLD_LARGE', count: 3 },
+                { type: 'DIAMOND', count: 3 },
+                { type: 'FISH_SMALL', count: 5 },
+                { type: 'ROCK_LARGE', count: 4 }
             ]
         }
     ],

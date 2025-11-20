@@ -14,30 +14,31 @@ class UIManager {
         this.addClickListener('level-select-btn', () => this.showLevelSelect());
         this.addClickListener('achievements-btn', () => this.showAchievements());
         this.addClickListener('settings-btn', () => this.showSettings());
-        
+
         // 关卡选择
         this.addClickListener('back-to-menu-btn', () => this.showMainMenu());
-        
+
         // 游戏控制按钮
         this.addClickListener('pause-btn', () => this.pauseGame());
+        this.addClickListener('pass-level-btn', () => this.passLevel());
         this.addClickListener('quit-btn', () => this.quitToMenu());
-        
+
         // 暂停界面按钮
         this.addClickListener('resume-btn', () => this.resumeGame());
         this.addClickListener('restart-btn', () => this.restartGame());
         this.addClickListener('quit-to-menu-btn', () => this.quitToMenu());
-        
+
         // 游戏结束界面按钮
         this.addClickListener('next-level-btn', () => this.nextLevel());
         this.addClickListener('retry-btn', () => this.retryLevel());
         this.addClickListener('back-menu-btn', () => this.backToMenu());
-        
+
         // 设置界面
         this.addClickListener('back-from-settings-btn', () => this.showMainMenu());
-        
+
         // 成就界面
         this.addClickListener('back-from-achievements-btn', () => this.showMainMenu());
-        
+
         // 设置控件
         this.initializeSettings();
     }
@@ -51,7 +52,7 @@ class UIManager {
                 const oldHandler = this.eventHandlers.get(id);
                 element.removeEventListener('click', oldHandler);
             }
-            
+
             // 添加新的事件监听器
             element.addEventListener('click', handler);
             // 存储处理函数引用，用于后续移除
@@ -72,7 +73,7 @@ class UIManager {
                 GameData.setSetting('musicVolume', parseInt(e.target.value));
             });
         }
-        
+
         // 音效音量
         const sfxVolume = document.getElementById('sfx-volume');
         const sfxValue = document.getElementById('sfx-volume-value');
@@ -82,7 +83,7 @@ class UIManager {
                 GameData.setSetting('sfxVolume', parseInt(e.target.value));
             });
         }
-        
+
         // 画质设置
         const graphicsQuality = document.getElementById('graphics-quality');
         if (graphicsQuality) {
@@ -98,7 +99,7 @@ class UIManager {
         document.querySelectorAll('.screen').forEach(screen => {
             screen.classList.add('hidden');
         });
-        
+
         // 显示指定屏幕
         const targetScreen = document.getElementById(screenId);
         if (targetScreen) {
@@ -123,15 +124,15 @@ class UIManager {
         const highScore = document.getElementById('high-score');
         const totalScore = document.getElementById('total-score');
         const completedLevels = document.getElementById('completed-levels');
-        
+
         if (highScore) {
             highScore.textContent = GameData.getHighScore();
         }
-        
+
         if (totalScore) {
             totalScore.textContent = GameData.getTotalScore();
         }
-        
+
         if (completedLevels) {
             completedLevels.textContent = GameData.getCompletedLevelCount();
         }
@@ -147,26 +148,26 @@ class UIManager {
     generateLevelGrid() {
         const levelGrid = document.getElementById('level-grid');
         if (!levelGrid) return;
-        
+
         levelGrid.innerHTML = '';
-        
+
         // 生成前20个关卡按钮
         for (let i = 1; i <= 20; i++) {
             const button = document.createElement('button');
             button.className = 'level-button';
             button.textContent = i;
-            
+
             if (GameData.isLevelCompleted(i)) {
                 button.classList.add('completed');
             } else if (!GameData.isLevelUnlocked(i)) {
                 button.classList.add('locked');
                 button.disabled = true;
             }
-            
+
             if (!button.disabled) {
                 button.addEventListener('click', () => this.selectLevel(i));
             }
-            
+
             levelGrid.appendChild(button);
         }
     }
@@ -185,26 +186,26 @@ class UIManager {
     showSettings() {
         // 加载当前设置
         const settings = GameData.getSettings();
-        
+
         const musicVolume = document.getElementById('music-volume');
         const musicValue = document.getElementById('music-volume-value');
         if (musicVolume && musicValue) {
             musicVolume.value = settings.musicVolume;
             musicValue.textContent = settings.musicVolume;
         }
-        
+
         const sfxVolume = document.getElementById('sfx-volume');
         const sfxValue = document.getElementById('sfx-volume-value');
         if (sfxVolume && sfxValue) {
             sfxVolume.value = settings.sfxVolume;
             sfxValue.textContent = settings.sfxVolume;
         }
-        
+
         const graphicsQuality = document.getElementById('graphics-quality');
         if (graphicsQuality) {
             graphicsQuality.value = settings.graphicsQuality;
         }
-        
+
         this.showScreen('settings-screen');
     }
 
@@ -227,6 +228,13 @@ class UIManager {
         if (game) {
             game.pauseGame();
             this.showScreen('pause-screen');
+        }
+    }
+
+    // 主动过关
+    passLevel() {
+        if (game) {
+            game.passLevel();
         }
     }
 
@@ -261,9 +269,9 @@ class UIManager {
             console.log('⚠️ 正在处理下一关切换，忽略重复调用');
             return;
         }
-        
+
         this.isProcessingNextLevel = true;
-        
+
         if (game) {
             // 直接使用Game类的currentLevel，确保正确的下一关
             const currentLevel = game.currentLevel;
@@ -273,7 +281,7 @@ class UIManager {
             game.startGame(nextLevel, false);
             this.showScreen('game-screen');
         }
-        
+
         // 延迟重置标志，防止快速连击
         setTimeout(() => {
             this.isProcessingNextLevel = false;
@@ -297,7 +305,7 @@ class UIManager {
     simulateLoading(callback) {
         const progressBar = document.getElementById('loading-progress');
         const loadingText = document.getElementById('loading-text');
-        
+
         let progress = 0;
         const loadingMessages = [
             '初始化游戏引擎...',
@@ -306,15 +314,15 @@ class UIManager {
             '准备钩子系统...',
             '加载完成!'
         ];
-        
+
         const interval = setInterval(() => {
             progress += Math.random() * 20;
-            
+
             if (progress >= 100) {
                 progress = 100;
                 if (progressBar) progressBar.style.width = '100%';
                 if (loadingText) loadingText.textContent = loadingMessages[4];
-                
+
                 setTimeout(() => {
                     clearInterval(interval);
                     callback();
